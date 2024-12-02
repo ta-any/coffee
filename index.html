@@ -1,1 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>L O A D</title>
+	<style type="text/css">
+		body{
+			padding: 0;
+			margin: 0;
+			position: relative;
+		}
+		#load{
+			width: 100%;
+			height: 100vh;
+			background-color: brown;
+			position: absolute;
+		}
+		.bean_size{
+			width: 100px;
+  			height: 100px;
+		}
+		.whole_bean{
+			display: block;
+			transform: rotate(200deg);
+/*			transform: translate(-50%, -50%);*/
+		}
+		.bean{
+			display: none;
+		}
+		.line{
+			width: 1000px;
+			border-bottom: 1px solid black;
+/*			transform: translateY(-50%);*/
+			transform: translate(-50%, -50%);
+			position: absolute;
+			top: 50%;
+			display: flex;
+  			justify-content: end;
+		}
+	</style>
+</head>
+<body>
+	<section id='load'>
+		<div class="line">
+			<img class="bean_size whole_bean" src="svg/bean.svg">
+			<div class="half_bean">
+				<img class="bean_size bean" src="svg/bean1.svg">
+				<img class="bean_size bean" src="svg/bean2.svg">
+			</div>
+		</div>
+	</section>
+	<script type="text/javascript">
+		function animate_element(block, from, to){
+			let lst = [...from, ...to]
+			return block.animate(lst, 
+					{ 	duration: 1400,
+						iterations: 1,
+						fill: "both",
+					}); 
+		}
 
+		function start_load() {
+			const width = window.innerWidth
+			const line = document.querySelector('.line')
+			const bean = document.querySelector('.whole_bean')
+			const beans = [...document.querySelector('.half_bean').children]
+
+			let load = animate_element(line, [{ width : '10px' }], [{ width : `${width + 100}px`,}])
+			animate_element(bean, [{ transform : 'rotate(0deg)'}], [{ transform : 'rotate(360deg)' }])
+
+			load.onfinish = (e) => {
+				line.style.border = 'none'
+				bean.style.display = 'none'
+				beans.forEach(bean => {
+					bean.style.display = 'block'
+				})
+			}	
+		}
+
+		start_load()
+
+		setTimeout((e) => {
+			const height = window.innerHeight
+			console.log(height)
+			let load_window = animate_element(load, [{top: '0px'}], [{top: `-${height}px`}])
+			load_window.onfinish = (event) => {
+				load.style.display = 'none'
+			}
+		}, 3000)
+	</script>
+</body>
+</html>
